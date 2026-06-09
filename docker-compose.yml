@@ -48,5 +48,29 @@ services:
       - kafka
 
     restart: unless-stopped
+
+  airflow:
+    build:
+      context: ./airflow
+
+    image: telecom-airflow:latest
+    container_name: telecom-airflow
+
+    depends_on:
+      - postgres
+
+    environment:
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+
+    command: standalone
+
+    volumes:
+      - ./airflow/dags:/opt/airflow/dags
+      - ./airflow/plugins:/opt/airflow/plugins
+
+    ports:
+      - "8080:8080"
+
+    restart: unless-stopped
 volumes:
   postgres_data:
